@@ -10,24 +10,22 @@
 After discussing with the team members, COVID-19 was a topic we all were interested in researching. We chose to focus on unemployment rates as we noticed the drastic increase in unemployment as a result of the pandemic.
 
 ### What are examples of other data driven projects related to this domain?
-#### Example 1: [name](link)
-description
+#### Example 1: [Growth Area of Employment in Seattle](https://data.seattle.gov/Land-Base/Urban-Centers-and-Villages-Annual-Covered-Total-Em/tx2p-n544)
+This dataset is the growth area of employment regarding urban centers and villages for the City of Seattle Comprehensive Plan.
 
-#### Example 2: [name](link)
-description
+#### Example 2: [COVID-19 Induced Unemployment and Mental Health](https://www.clickondetroit.com/news/national/2020/05/12/new-study-projects-68000-deaths-of-despair-among-americans-due-to-the-coronavirus-pandemic/)
+Unemployment during COVID-19 has had a rippling effect on mental health. There has been a recent study initiative, by the Well Being Trust and the Robert Graham Center for Policy Studies in Family Medicine and Primary Care, revolving around possible loss of lives due to the socioeconomic impact of this pandemic.  
 
-#### Example 3: [name](link)
-description
-
+#### Example 3: [Inequality Impact of Unemployment](https://drive.google.com/file/d/1JYI4bzQ5ytmml_Vct8o-Zw7BqRsHKzsq/view)
+There was a recent study completed on the inequality impact of the unemployment shock completed by foreign universities (University of Cambridge/Oxford). Though the research collected includes multiple countries, it is beneficial to analyze as our domain is revolving around unemployment. This gives us an idea of what chain reactions are caused by the substantial COVID-19 shock.
 
 ### What data-driven questions do you hope to answer about this domain? How can these questions be answered using data?
 
 #### Question 1: How does the number of confirmed cases and hospitalized cases affect the unemployment rate in Washington state?
-As this dataset includes cases of each state in the US, we could see if the trend of the confirmed cases over time affected the trend of the unemployment rate.
+We could see if the trend of the confirmed cases in various states have affected the trend of unemployment rates over time.
 
 #### Question 2: What impacts does the unemployment have on the US economy/job market?
-
-~~ can the focus be shifted to washington instead of us as a whole?
+We can analyze data for unemployment rates and job availability as well as projected growths of different industries to see how they correlate with one another.
 
 #### Question 3: How has unemployment in Washington been affected and will continue to be affected by the pandemic?
 By viewing the graphs and charts in the dataset, we can obtain knowledge that will help us understand how unemployment has been hit already and in which specific areas and industries.
@@ -55,8 +53,7 @@ The data helps us understand how the hospital equipment is used in each state an
 
 ### Data Source 2: [US Unemployment Insurance Weekly Claims](https://www.arcgis.com/home/item.html?id=b2286e8d03a74206809252a788f35b52&view=list#data) by Helen Thompson
 
-Next was looking at data sets for unemployment insurance claims.
-As college students, many rely on jobs to help pay for tuition costs, house bills, additional fees for daily use etc. In addition to the usual transactions, many are also dependent upon graduation as it will be the first step for many to enter the full-time job market.
+Next was looking at data sets for unemployment insurance claims. As college students, many rely on jobs to help pay for tuition costs, house bills, additional fees for daily use etc. In addition to the usual transactions, many are also dependent upon graduation as it will be the first step for many to enter the full-time job market.
 
 #### How was the data collected or generated?
 ArcGIS is a website that relies on creating visualizations from datasets. This specific dataset was created by pooling information from the United State Department of Labor, Employment & Training Administration. The data was collected from 01/01/2020 and is being updated weekly. Because of the consistent updates, it is inevitable that there will be changes. This specific link provides a data tab and a visualization tab that creates an in-depth analysis of the unemployment rates according to each state.
