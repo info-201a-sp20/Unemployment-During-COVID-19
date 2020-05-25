@@ -58,7 +58,8 @@ positive_increase_vs_date <- function(covid_df) {
     ) %>%
     layout(
       xaxis = list(title = "Date"),
-      yaxis = list(title = "Positive and Hospitalized Cases")
+      yaxis = list(title = "Positive and Hospitalized Cases"),
+      title = "Jan. 23 to May 11 Positive and Hospitalized Cases"
     )
 }
 
