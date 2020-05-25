@@ -1,7 +1,7 @@
-washington_covid <- read.csv("washington.gov data/crosstab_real.csv",
+washington_covid <- read.csv("../data/washington.gov data/crosstab_real.csv",
                              stringsAsFactors = FALSE)
 
-claims_data <- read.csv("washington.gov data/initial_claims.csv",
+claims_data <- read.csv("../data/washington.gov data/initial_claims.csv",
                         stringsAsFactors = FALSE)
 
 library("dplyr")
@@ -21,6 +21,8 @@ ggplot(data = claims_data) +
     y = "Initial Claims"
   )
 ggplotly(claims_plot)
+# The plot is a scatterplot of initial claims of EVERY industry and EVERY
+# county that occurred on a weekly basis from weeks 1-19 of the pandemic.
 str(claims_data)
 
 washington_covid$ADAMS <- as.numeric(washington_covid$ADAMS)
@@ -64,11 +66,25 @@ washington_covid$WHATCOM <- as.numeric(washington_covid$WHATCOM)
 washington_covid$WHITMAN <- as.numeric(washington_covid$WHITMAN)
 washington_covid$YAKIMA <- as.numeric(washington_covid$YAKIMA)
 
+#Converted all relevant columns from type char to type numeric
+
 impacted_industry <- mutate(washington_covid, industry_total =
                               rowSums(Filter(is.numeric, washington_covid),
                                       na.rm = TRUE)) %>%
   filter(industry_total == max(industry_total, na.rm = TRUE)) %>%
   pull(Industry)
+# I wanted to see what the most impacted industry was based on
+# the week 19 analysis of unemployment claims.
+# So, I converted every relevant column to numeric and summed
+# the total amount of unemployment claims by INDUSTRY.
+# After I found the one with the most unemployment claims,
+# and I pulled the Industry of being the most impacted.
+# The industry that was post affected was Educational Services.
+
+counties_sum <- rbind(washington_covid,
+                      c("Sum", " ", colSums(Filter(is.numeric,
+                                                   washington_covid),
+                                            na.rm = TRUE)))
 
 impacted_industries_king <- filter(washington_covid, KING == KING) %>%
   arrange(-KING) %>%
@@ -76,11 +92,12 @@ impacted_industries_king <- filter(washington_covid, KING == KING) %>%
   pull(Industry)
 paste(impacted_industries_king)
 
-counties_sum <- rbind(washington_covid,
-                      c("Sum", " ", colSums(Filter(is.numeric,
-                                                   washington_covid),
-                                            na.rm = TRUE)))
-impacted_county <- names(counties_sum)[max.col(counties_sum,
-                                               ties.method = "first")]
-
-str(counties_sum)
+# I first found the sum of all unemployment claims per COUNTY
+# and made that into a new row called sum. It was clear to see,
+# and even before I ran the data, an educated guess could have told
+# me that King county had the must unemployment claims out of all the
+# coutnies in Washington. I wanted to see the 5 most negatively
+# imapacted industries in King County, and I was able to pull that.
+# The 5 most impacted industries are Not Disclosed, Education Services,
+# Profession and Techincal Services, Publishing Industries (not internet),
+# and Hospitals.
