@@ -1,7 +1,7 @@
-washington_covid <- read.csv("washington.gov data/crosstab_real.csv",
+washington_covid <- read.csv("../data/washington.gov data/crosstab_real.csv",
                              stringsAsFactors = FALSE)
 
-claims_data <- read.csv("washington.gov data/initial_claims.csv",
+claims_data <- read.csv("../data/washington.gov data/initial_claims.csv",
                         stringsAsFactors = FALSE)
 
 library("dplyr")
