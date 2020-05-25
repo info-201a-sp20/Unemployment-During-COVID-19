@@ -7,53 +7,55 @@ rm(list = ls())
 library(ggplot2)
 library(dplyr)
 library(tidyverse)
+library(lubridate)
 library(openintro)
-# Create the COVID-19 cases dataset
+library(plotly)
+library(lintr)
+library(styler)
+style_file("covid-19_cases.R")
+# Create the COVID-19 cases dataset from Jan. 23 to May 11
 covid19_cases <- read.csv("COVID-19_cases/us_states_covid19_daily.csv")
 
-# Which state has the highest hispitalized rate amongst the total cases
-# of the state?
-highest_hospitalized_state <- covid19_cases %>%
-  group_by(state) %>%
-  summarize(
-    total_positive = sum(positive, na.rm = TRUE),
-    total_current_hospitalized = sum(hospitalizedCurrently, na.rm = TRUE),
-    hospitalized_rate = total_current_hospitalized / total_positive
-  ) %>%
-  filter(hospitalized_rate == max(hospitalized_rate, na.rm = TRUE)) %>%
-  pull(state)
+# What is the total positive cases until May 11?
+total_positive_cases <- covid19_cases %>%
+  head(56) %>%
+  tally(positive) %>%
+  pull()
 
-# Which state has the most positive cases?
-highest_positive_state <- covid19_cases %>%
-  abbr2state(state) %>%
-  group_by(state) %>%
+# Which day has the highest increase of positive case?
+highest_positiveIncrease_date <- covid19_cases %>%
+  mutate(day = ymd(date)) %>%
+  group_by(day) %>%
   summarize(
-    total_positive_cases =  sum(positive, na.rm = TRUE)
+    total_positiveIncrease = sum(positiveIncrease, na.rm = TRUE)
   ) %>%
-  filter(total_positive_cases == max(total_positive_cases, 
-                                     na.rm = TRUE)
-         ) %>%
-  pull(state)
+  filter(total_positiveIncrease == max(total_positiveIncrease,
+    na.rm = TRUE
+  )) %>%
+  pull(day)
 
-# Bar chart of the COVID-19 hospitalized rate vs state
-# This chart was intended to present the current hospitalized rate in each state
-# from Jan. 23 to May 11. Through the bar chart, we could tell how each state's
-# hospitalized rate differes from each other
-state_vs_rate_chart <- function(covid_df){
-    ggplot(
-      data = covid_df,
-      mapping = aes(
-        x = state, 
-        y = hospitalizedCurrently / positive,
-        fill = hospitalizedCurrently / positive
-      )
-    ) + geom_col() +
-    labs(
-      x = "State", y = "Hospitalized Rate",
-      subtitle = "Hospitalized Rate per State"
-    ) +
-    theme(axis.text.x = element_text(angle = 65, vjust = 0.6))
+# Bar chart of the COVID-19 increase of positive case and currently hositalized vs date
+# This chart was intended to present the total positive increase cases  and currently
+# hospitalized cases of each day from Jan. 23 to May 11. Through the bar chart,
+# we could tell the trend of positive cases and currently hospitalized cases each day
+covid19_date <- covid19_cases %>%
+  mutate(day = ymd(date))
+
+positiveIncrease_vs_date_chart <- function(covid_df) {
+  plot_ly(
+    x = ~ covid_df$day, y = ~ covid_df$positiveIncrease,
+    type = "scatter", mode = "lines",
+    name = "Positive Increase", fill = "tozeroy"
+  ) %>%
+    add_trace(
+      x = ~ covid_df$day, y = ~ covid_df$hospitalizedCurrently,
+      name = "Currently Hospitalized",
+      fill = "tozeroy"
+    ) %>%
+    layout(
+      xaxis = list(title = "Date"),
+      yaxis = list(title = "Positive and Hospitalized Cases")
+    )
 }
 
-state_vs_rate_chart(covid19_cases)
-  
+positiveIncrease_vs_date_chart(covid19_date)
