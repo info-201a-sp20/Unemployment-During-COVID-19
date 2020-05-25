@@ -23,7 +23,7 @@ total_positive_cases <- covid19_cases %>%
   pull()
 
 # Which day has the highest increase of positive case?
-highest_positiveIncrease_date <- covid19_cases %>%
+highest_positive_increase_date <- covid19_cases %>%
   mutate(day = ymd(date)) %>%
   group_by(day) %>%
   summarize(
@@ -34,14 +34,18 @@ highest_positiveIncrease_date <- covid19_cases %>%
   )) %>%
   pull(day)
 
-# Bar chart of the COVID-19 increase of positive case and currently hositalized vs date
-# This chart was intended to present the total positive increase cases  and currently
-# hospitalized cases of each day from Jan. 23 to May 11. Through the bar chart,
-# we could tell the trend of positive cases and currently hospitalized cases each day
-covid19_date <- covid19_cases %>%
-  mutate(day = ymd(date))
+# Create a function that takes in the covid-19 dataset as parameters
+# and create an area plot chart of the COVID-19 increase of positive
+# case and currently hositalized vs date
+#
+# This chart was intended to present the total positive increase cases
+# and currently hospitalized cases of each day from Jan. 23 to May 11.
+# Through the area plot chart, we could tell the trend of positive cases
+# and currently hospitalized cases each day
+covid19_date <- covid19_cases %>% # This datadrame added `day` column
+  mutate(day = ymd(date)) # to convert `date` to date variable
 
-positiveIncrease_vs_date_chart <- function(covid_df) {
+positive_increase_vs_date <- function(covid_df) {
   plot_ly(
     x = ~ covid_df$day, y = ~ covid_df$positiveIncrease,
     type = "scatter", mode = "lines",
@@ -58,4 +62,4 @@ positiveIncrease_vs_date_chart <- function(covid_df) {
     )
 }
 
-positiveIncrease_vs_date_chart(covid19_date)
+positive_increase_vs_date(covid19_date)
