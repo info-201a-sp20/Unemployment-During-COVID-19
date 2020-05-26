@@ -1,9 +1,5 @@
 # Midpoint Deliverable: Bar chart
 
-
-# Clears global environment
-rm(list = ls())
-
 library(ggplot2)
 library(dplyr)
 library(tidyverse)
@@ -14,8 +10,7 @@ library(lintr)
 library(styler)
 style_file("covid-19_cases.R")
 # Create the COVID-19 cases dataset from Jan. 23 to May 11
-covid19_cases <- read.csv("../data/COVID-19_cases/us_states_covid19_daily.csv",
-                          stringsAsFactors = FALSE)
+covid19_cases <- read.csv("data/COVID-19_cases/us_states_covid19_daily.csv")
 
 # What is the total positive cases until May 11?
 total_positive_cases <- covid19_cases %>%
@@ -64,4 +59,4 @@ positive_increase_vs_date <- function(covid_df) {
     )
 }
 
-positive_increase_vs_date(covid19_date)
+covid_plot <- positive_increase_vs_date(covid19_date)

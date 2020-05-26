@@ -1,0 +1,124 @@
+---
+title: "Midpoint Deliverable"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(dplyr)
+library(kableExtra)
+source("scripts/summary_info.r")
+source("scripts/summary_table.r")
+source("scripts/covid-19_cases.r")
+source("scripts/washington_data.r")
+source("scripts/national_report.r")
+```
+
+## The Effects of COVID-19 on Unemployment in Washington and the United States
+
+### Introduction
+This project looks at the effects of COVID-19 on unemployment in Washington and 
+the United States as a whole. This topic is important as the quarantine has had 
+a large impact on the local and national economy.
+
+The data for this project was acquired from the following sources:
+
+##### 1. [COVID-19 in USA](https://www.kaggle.com/sudalairajkumar/covid19-in-usa/?select=us_states_covid19_daily.csv) by Sudalai Raj Kumar {#data1}
+
+##### 2. [US Unemployment Insurance Weekly Claims](https://www.arcgis.com/home/item.html?id=b2286e8d03a74206809252a788f35b52&view=list#data) by Helen Thompson {#data2}
+
+##### 3. [Initial Claims applications for Unemployment Insurance - WA](https://public.tableau.com/profile/jeff.robinson#!/vizhome/InitialClaimsapplicationsforUnempIoymentInsurance-WA_ETA539-/Story1) by Washington Employment Security Department {#data3}
+
+***
+
+### Summary Information
+
+We were curious to see which was the most impacted industry based on the 
+unemployment claims made in week 19. We felt this was an important observation 
+to make as identifying the industry that was affected the most can lead to 
+informed decision making when figuring out who should receive the most financial 
+support. The most impacted industry was found to be `r impacted_industry`.
+
+Next, we wanted to know which industries in King County were the most negatively 
+impacted by the quarantine. We decided to observe this because again, knowing 
+which industries were most negatively affected can help make informed decisions 
+about which sectors need the most financial support. The 5 most negatively 
+impacted industries were: `r paste(impacted_industries_king[0:4])` 
+`r paste("and", impacted_industries_king[5])`.
+
+***
+
+### Summary Table
+This aggregate summary table is based on data collected from 
+[data source 1](#data1). The data in this table is grouped by date, arranged 
+from the most recent date to the earliest date in record. Grouping the data by 
+date allows us to observe the trend of total positive cases in the US every day 
+and we can develop a more holistic understanding of the impact of the virus by 
+also considering the number of people who recovered or are currently 
+hospitalized.
+
+The table includes information of date observed, total positive cases for a 
+given day, total number of people hospitalized/recovered and the total increase 
+in positive cases compared to the previous day.
+
+It can be observed that at the beginning, the number of positive cases grew by a 
+lot every day at a very fast rate. In April the number of cases stabilized at an 
+average of about 30k every day, while in May this number has lessened to about 
+an average of 24k with the most recent data from May 11th marking about an 18k 
+increase in new cases, showing a slowed growth as time goes on.    
+
+```{r, warning=FALSE, echo=FALSE}
+  knitr::kable(cases_by_date, col.names = c("Date", "Positive Cases", 
+                                            "People Hospitalized", 
+                                            "People Recovered", 
+                  "Increase in Positive Cases (Compared to Previous Day)")) %>%
+  kable_styling("striped") %>%
+  scroll_box(height = "300px", width = NULL,
+    box_css = "border: 5px solid #ddd; padding: 5px; ", extra_css = NULL,
+    fixed_thead = TRUE)
+```
+
+***
+
+### Charts
+#### [Data Source 1](#data1)
+This is an area plot chart showing the relationship between the increase in 
+positive cases and number of people currently hospitalized against date. This 
+chart was intended to present the total increase in daily positive cases and 
+currently hospitalized cases from Jan. 23 to May 11. Visualizing this 
+information can help us more easily identify the trend of positive cases and 
+currently hospitalized cases measured daily, and allow us to anticipate the 
+potential trends in unemployment.
+
+```{r, warning=FALSE, echo=FALSE}
+  covid_plot
+```
+
+***
+
+#### [Data Source 2](#data2)
+This is a line graph showing the average unemployment claims made in the US, and 
+represents the relationship between the number of initial claims filed on a 
+given date. It is important to observe this information because it allows us to 
+see when the COVID-19 outbreak started to impact the unemployment rates across 
+the country, and this information can be used for instnace to prepare against 
+the next wave of the outbreak to better manage the provision of support for 
+those who become unemployed.
+
+```{r, warning=FALSE, echo=FALSE}
+  national_claims_plot
+```
+
+
+***
+
+#### [Data Source 3](#data3)
+This plot is a plot of initial claims spanning every industry of every 
+county in Washington that occurred on a weekly basis from weeks 1-19 of the 
+pandemic. After week 10 there has been a surge in the number of initial claims 
+made, jumping from 14154 claims in week 10 to 128962 claims in week 11. 
+
+```{r, warning=FALSE, echo=FALSE}
+  wa_claims_plot
+```
+
