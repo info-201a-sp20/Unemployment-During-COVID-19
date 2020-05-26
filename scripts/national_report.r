@@ -4,7 +4,7 @@ library("dplyr")
 library("tidyr")
 library("ggplot2")
 
-load_data <- read.csv("national_report.csv", stringsAsFactors = FALSE)
+load_data <- read.csv("../data/unemployment national report data/national_report.csv", stringsAsFactors = FALSE)
 # This script helps find the average initial claims in the US
 is.data.frame(load_data)
 

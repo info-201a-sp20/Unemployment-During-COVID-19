@@ -1,5 +1,6 @@
 # Midpoint Deliverable: Bar chart
 
+
 # Clears global environment
 rm(list = ls())
 
@@ -11,7 +12,6 @@ library(openintro)
 library(plotly)
 library(lintr)
 library(styler)
-
 style_file("covid-19_cases.R")
 # Create the COVID-19 cases dataset from Jan. 23 to May 11
 covid19_cases <- read.csv("../data/COVID-19_cases/us_states_covid19_daily.csv")
