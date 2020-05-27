@@ -9,7 +9,6 @@ library(dplyr)
 library(lubridate)
 style_file("summary_table.R")
 
-
 # Read the "us_state_covid19_daily.csv" file
 total_cases <- read.csv("data/COVID-19_cases/us_states_covid19_daily.csv",
   stringsAsFactors = FALSE)
