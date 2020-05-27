@@ -113,10 +113,19 @@ those who become unemployed.
 ***
 
 #### [Data Source 3](#data3)
-This plot is a plot of initial claims spanning every industry of every 
-county in Washington that occurred on a weekly basis from weeks 1-19 of the 
-pandemic. After week 10 there has been a surge in the number of initial claims 
-made, jumping from 14154 claims in week 10 to 128962 claims in week 11. 
+This plot is a plot of initial claims spanning every industry of every
+county in Washington that occurred on a weekly basis from weeks 1-19 of the
+pandemic. After week 10 there has been a surge in the number of initial claims
+made, jumping from 14154 claims in week 10 to 128962 claims in week 11. From
+weeks 1-10, the trend stayed primarily constant ranging from about 5000-14000,
+however, after the spike from week 11, the trend has been very sporadic, as
+intial claims have fluctuated up and down. The use of a scatterplot is used to
+show if there is a relationship between two numeric variables and to see if there
+is any possible correlation. To test to see if weeks and initial cases had
+correlation (that is as one goes through the weeks of the pandemic, it would
+be apparent that there is a relationship between week and cases), however to this
+point, it seems as if there is no relationship or a correlation between the two
+factors.
 
 ```{r, warning=FALSE, echo=FALSE}
   wa_claims_plot
