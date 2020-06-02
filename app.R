@@ -11,6 +11,9 @@ library(leaflet)
 # shraddha
 
 # joe
+washington_covid <- read.csv("data/washington_unemployment/crosstab_real.csv",
+                             stringsAsFactors = FALSE)
+
 claims_data <- read.csv("data/washington_unemployment/initial_claims.csv",
                         stringsAsFactors = FALSE)
 
