@@ -53,6 +53,17 @@ national_input <- selectInput("select",
             label = "Select State",
             choices = distinct(load_data,State)
             )
+# removed commas in initial_claims
+load_data$Initial_Claims <- as.numeric(gsub(",", "", load_data$Initial_Claims)) 
+
+#changed date into .date format for chronological purposes
+load_data$Filed_week_ended <- as.Date(load_data$Filed_week_ended, format = "%m/%d/%y")
+
+# 50 states were grouped by the date, then took the average of the initial claims and assigned new column for average initial claims
+first <- load_data %>% 
+  group_by( Filed_week_ended) %>% 
+  summarize(average_initial_claims = round(mean(Initial_Claims, 0))
+  )
 
 # joe
 washington_covid <- read.csv("data/washington_unemployment/crosstab_real.csv",
@@ -180,6 +191,7 @@ ui <- tagList(navbarPage(
                prepare for similar situation in the future."),
              h2("Takeaway 2: National Unemployment Claims"),
              h2(""),
+             plotlyOutput("conclusion_plot"),
              h4("Purpose of the National Unemployment Claims Line Chart"),
              p("The line chart was created in order to see what the average
                 national claim reported the beginning of the pandemic up until a
@@ -197,22 +209,20 @@ ui <- tagList(navbarPage(
                 has recently. Looking at the chart, it is apparent that there
                 has been a set number of average claims throughout states until
                 March 2020."), 
-             p("Based on the data provided, we can assume that this is when the
-                lockdown measures were taken place, causing many to lose jobs
-                and in result, file unemployment cases. There is a significant
-                jump in the beginning of March. Alabama for example, shows the
-                claim spike on March 21st and exponentially increases for the
-                next few weeks. This data helps us see the trends of specific
-                months/weeks that the pandemic impacted heavily on people
-                throughout the nation. The data is continuously updated on a 
-                weekly basis, leading to more opportunities to make predictions
-                in the future. This can help provide the government a quick look
-                at what states are affected and how badly they are affected. By
-                analyzing the data, organizations can predict the amount of
-                resources they may need to set up or infer domino chain
-                reactions based on their position. The data serves as a
-                possiblity of allowing individuals/groups to see what they can
-                offer for those that are affected by the pandemic."),
+             p("Based on the data provided, we can assume that this is when the lockdown 
+               measures were taken place, causing many to lose jobs and in result, file
+               unemployment cases. There is a significant jump in the beginning of 
+               March. Alabama for example, shows the claims spike from March 14th (4,752 claims),  
+               exponentially increases for the next few dates (55,335 to 113,641 claims). This 
+               data helps us see the trends of specific months/weeks that the pandemic impacted 
+               heavily on people throughout the nation. The data is continuously updated on a 
+               weekly basis, leading to more opportunities to make predictions in the future.
+               This can help provide the government a quick look at what states are 
+               affected and how badly they are affected. By analyzing the data, organizations
+               can predict the amount of resources they may need to set up or infer domino
+               chain reactions based on their position. The data serves as a possiblity of
+               allowing individuals/groups to see what they can offer for those that are 
+               affected by the pandemic."),
              h2("Takeaway 3: Washington Unemployment Claims"),
              plotlyOutput("week_plot"),
              h4("Purpose of Washington Unemployment Claims Plot"),
@@ -407,6 +417,21 @@ server <- function(input, output) {
     ggplotly(national_plot)
     
     return(national_plot)
+  })
+  output$conclusion_plot <- renderPlotly({
+    second <- ggplot(data = first, aes(x=Filed_week_ended, y = average_initial_claims, group=1)) +
+      geom_line()+
+      geom_point()+
+      scale_x_date(breaks = first$Filed_week_ended) +  
+      
+      ylim(0, max(first$average_initial_claims) + 500) +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+      ggtitle("Average Unemployment Claim Rates in the US ") +
+      xlab("Date") +
+      ylab("Number of Initial Claims")
+    ggplotly(second)
+    return(second)
+    
   })
   
   # washington unemployment plots
