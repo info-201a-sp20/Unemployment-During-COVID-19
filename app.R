@@ -365,18 +365,10 @@ server <- function(input, output) {
   
   #National Cases Confirmed
   output$national_cases_plot <- renderPlotly({
-    data_xaxis <- covid19_cases %>%
-      select(Date) %>%
-      filter(Date >= input$start, Date <= input$end)
-    data_yaxis <- covid19_cases %>%
-      select(positive, hospitalizedCurrently, hospitalizedCumulative,
-             inIcuCurrently, inIcuCumulative, onVentilatorCurrently,
-             onVentilatorCumulative, recovered, death) %>%
-      range(covid19_cases$selected_col)
     national_cases_plot <- plot_ly(
       data = covid19_cases,
-      x = ~ data_xaxis,
-      y = ~ data_yaxis,
+      x = ~ Date,
+      y = ~ positive,
       type = "scatter", mode = "lines",
       name = cases_input$choices, fill = "tozeroy"
     ) %>%
