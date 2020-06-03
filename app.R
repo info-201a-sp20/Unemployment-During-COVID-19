@@ -370,7 +370,7 @@ server <- function(input, output) {
     national_cases_plot <- plot_ly(
       data = covid19_cases,
       x = ~ Date,
-      y = ~ positive,
+      y = ~ positiveIncrease,
       type = "scatter", mode = "lines",
       name = cases_input$choices, fill = "tozeroy"
     ) %>%
