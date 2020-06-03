@@ -3,6 +3,7 @@ library(ggplot2)
 library(dplyr)
 library(plotly)
 library(leaflet)
+library(lubridate)
 source('scripts/national_report.R') 
 # define inputs
 
@@ -13,6 +14,13 @@ covid_cases_df <- read.csv("data/COVID-19_cases/us_states_covid19_daily.csv")
 # variables
 covid19_cases <- covid_cases_df %>%
   mutate(Date = ymd(date))
+
+# Select the categories showing in the dropdown widget
+selected_categories <- covid19_cases %>%
+  select(positive, hospitalizedCurrently, hospitalizedCumulative,
+         inIcuCurrently, inIcuCumulative, onVentilatorCurrently,
+         onVentilatorCumulative, recovered, death) %>%
+  colnames()
 
 # This date range selector allows user to select the range of date
 date_input <- dateRangeInput(
@@ -26,20 +34,18 @@ date_input <- dateRangeInput(
   language = "en", 
   separator = " to "
 )
-# Select the categories showing in the dropdown widget
-selected_categories <- covid19_cases %>%
-  select(positive, hospitalizedCurrently, hospitalizedCumulative,
-         inIcuCurrently, inIcuCumulative, onVentilatorCurrently,
-         onVentilatorCumulative, recovered, death) 
 
 # This dropdown allows user to select categories of cases
 # in different circumstances
 cases_input <- selectInput(
   inputId = "categories",
   label = "Interest of Categories",
-  choices = colnames(selected_categories),
+  choices = selected_categories,
   selected = "positive"
 )
+
+# Return the selected column name in `case_input`
+selected_col <- cases_input$selected
 
 # shraddha
 national_input <- selectInput("select", 
@@ -124,7 +130,7 @@ ui <- tagList(navbarPage(
     tabPanel("Introduction", value = 0),
     navbarMenu("Visualizations",
       # katie
-      tabPanel("Visualization 1", value = 1),
+      tabPanel("COVID-19 Cases", value = 1),
       # shraddha
       tabPanel("Unemployment Claims in the US", value = 2),
       # joe
@@ -133,6 +139,45 @@ ui <- tagList(navbarPage(
     # ALL OF OUR takeaways in a conclusion page.
     tabPanel("Conclusion", value = 4,
              h1("Conclusions"),
+             h2("Takeaway 1: National Confirmed Cases"),
+             plotlyOutput("cases_plot"),
+             h4("Purpose of the National Cases Confirmed Area Plot"),
+             p("The area plot focused on the trend throughout the period of selected
+               date. The data went across from January 23 to May 11.We could see how 
+               cases in different circumstances changed fromthe first case reported 
+               until the most recent case in the data. In the conclusion, we only 
+               included the positive increase cases and currently hospitalized cases
+               since these are the 2 areas that we are most interested in."),
+             h4("What We Learned from the Data and What We Can Use Our Data To
+                Predict"),
+             p("As the data showcase not only the total cases confirmed, we
+               could also tell how our healthcare resources, e.g. hospital, ICU, are 
+               used nationally. We could also track the recovered number to tell how 
+               each state is reacting with the pandemic. Through the area plot, we  
+               could tell the peak of increasing cases was in April, with 4 days of
+               more than 10k of positive increase cases. The rest of the month still
+               remained a high number of increasing positive cases in between 5k to 
+               10k. Due to the high number of positive increase in single day, the 
+               number of currently hospitalized became high after cases confirmed. In
+               April, there were 6 days with more than 15k people hospitalized."),
+             p("According to the data provided, we could predict that as the positive 
+               cases grow, the growth of hospitalized cases will come after. To prevent 
+               the healthcare system overload, it is important to flatten the curve of 
+               the confirmed cases, so the hospitals are able to distribute the more 
+               resources to each patient. When the number of positive increase cases went
+               down, hospitals may have more time to response and purchase more supplies. 
+               Another major effect of short in healthcare resources was the rise in death
+               rate. As hospitals are not able to provide enough healthcare until the 
+               patient recover, the time for patients to recover by themselves become 
+               shorter thus causes unnecessary deaths. As the data is updated by daily
+               basis, it could help the government to track the cases and check which 
+               state has been affected the most so far. The public sectors are then able 
+               determine which state they should fund more for the healthcare resources. 
+               Through the number of cases in ICU and on ventilators, governments are also
+               able to tell which healthcare they should purchase/produce more to support 
+               the increasing number of hospitalized. In conclusion, the insights help the
+               government to puzzle out which healthcare resources they are lack in and 
+               prepare for similar situation in the future."),
              h2("Takeaway 2: National Unemployment Claims"),
              h2(""),
              h4("Purpose of the National Unemployment Claims Line Chart"),
@@ -221,7 +266,12 @@ ui <- tagList(navbarPage(
       sidebarPanel(
         # katie
         conditionalPanel(condition = "input.tabs == 1", 
-                         helpText("desc of visual")),
+                         date_input,
+                         cases_input,
+                         helpText("This area plot depicts the trend of cases in
+                                  different circumstances in selected range of 
+                                  date in all 50 states. Circumstances could be
+                                  selected from the dropdown select box.")),
         # shraddha
         conditionalPanel(condition = "input.tabs == 2", 
                          national_input,
@@ -233,15 +283,26 @@ ui <- tagList(navbarPage(
         # joe
         conditionalPanel(condition = "input.tabs == 3", 
                          industry_input,
-                          helpText("This bar chart describes the initial
-                                  unemployment claims per industry in week 19 of
-                                  the COVID-19 pandemic. There are a total of 94
-                                  industries classified by the state of
-                                  Washington."))
+                        helpText("This bar chart describes the initial
+                                 unemployment claims per industry in week 19 of
+                                 the COVID-19 pandemic. There are a total of 94
+                                 industries classified by the state of
+                                 Washington."))
       ),
       mainPanel(
         # katie
-        conditionalPanel(condition = "input.tabs == 1", helpText("main")),
+        conditionalPanel(condition = "input.tabs == 1", 
+                         titlePanel("National Cases Confirmed"),
+                         h3("Plot of cases through date"),
+                         plotlyOutput("national_cases_plot"),
+                         helpText("The area plot portrays the selected
+                                  categories of interest within the selected
+                                  range of date. The data range box allows 
+                                  users to select the period they wanted to 
+                                  focus on. The area plot will be adjusted 
+                                  accordingly. The dropdown select box allows
+                                  user to select the categories of interest 
+                                  on y-axis.")),
         # shraddha
         conditionalPanel(condition = "input.tabs == 2", 
                          titlePanel("National Unemployment Claims"),
@@ -270,7 +331,53 @@ ui <- tagList(navbarPage(
 )
 
 server <- function(input, output) {
-  # katie
+  # Positive Increase and Hospitalized Cases 
+  output$cases_plot <- renderPlotly({
+    cases_plot <- plot_ly(
+        data = covid19_cases,
+        x = ~ covid19_cases$Date, y = ~ covid19_cases$positiveIncrease,
+        type = "scatter", mode = "lines",
+        name = "Positive Increase", fill = "tozeroy"
+      ) %>%
+        add_trace(
+          x = ~ covid19_cases$Date, y = ~ covid19_cases$hospitalizedCurrently,
+          name = "Currently Hospitalized",
+          fill = "tozeroy"
+        ) %>%
+        layout(
+          xaxis = list(title = "Date"),
+          yaxis = list(title = "Positive and Hospitalized Cases"),
+          title = "Jan. 23 to May 11 Positive and Hospitalized Cases"
+        )
+
+      return(cases_plot)
+  })
+  
+  #National Cases Confirmed
+  output$national_cases_plot <- renderPlotly({
+    data_xaxis <- covid19_cases %>%
+      select(Date) %>%
+      filter(Date >= input$start, Date <= input$end)
+    data_yaxis <- covid19_cases %>%
+      select(positive, hospitalizedCurrently, hospitalizedCumulative,
+             inIcuCurrently, inIcuCumulative, onVentilatorCurrently,
+             onVentilatorCumulative, recovered, death) %>%
+      range(covid19_cases$selected_col)
+    national_cases_plot <- plot_ly(
+      data = covid19_cases,
+      x = ~ data_xaxis,
+      y = ~ data_yaxis,
+      type = "scatter", mode = "lines",
+      name = cases_input$choices, fill = "tozeroy"
+    ) %>%
+      layout(
+        xaxis = list(title = "Date"),
+        yaxis = list(title = cases_input$choices),
+        title = "Jan. 23 to May 11 Cases"
+      )
+
+    return(national_cases_plot)
+  })
   
   # National Unemployment Claims
   df_filtered <- reactive({
