@@ -12,7 +12,7 @@ source('scripts/national_report.R')
 # shraddha
 national_input <- selectInput("select", 
             inputId = "state_input",
-            label = h3("Select State"),
+            label = "Select State",
             choices = distinct(load_data,State)
             )
 
@@ -78,8 +78,8 @@ impacted_industry <- impacted_industry %>%
 
 industry_input <- sliderInput(
   inputId = "industry_choice",
-  label = "Please Choose a Range of Industries (1-94), all ordered by
-  Alphabetical Order (A-Z)",
+  label = "Choose a Range of Industries (1-94), all ordered by Alphabetical
+  Order (A-Z)",
   min = head(impacted_industry$Row, 1), 
   max = nrow(impacted_industry),
   value = c(1, 94)
@@ -101,7 +101,42 @@ ui <- tagList(navbarPage(
     # ALL OF OUR takeaways in a conclusion page.
     tabPanel("Conclusion", value = 4,
              h1("Conclusions"),
-             h2("Takeaway 1: Washington Unemployment Claims"),
+             h2("Takeaway 2: National Unemployment Claims"),
+             h2(""),
+             h4("Purpose of the National Unemployment Claims Line Chart"),
+             p("The line chart was created in order to see what the average
+                national claim reported the beginning of the pandemic up until a
+                few weeks into May."),
+             h4("What We Learned from the Data and What We Can Use Our Data To
+                Predict"),
+             p("Initially we wanted to look at what the unemployment looked like
+                on average across the US. While we didn’t brainstorm on a
+                specific data, one of the data sources we looked at was provided
+                and updated on a weekly basis starting form January 5, 2020.
+                This was the initial pandemic date marked as the unemployment
+                claims started to take place. The pandemic obviously did not
+                start off with an outrageous number of unemployment rates as we
+                believe that as COVID was not impacting employment as much as it
+                has recently. Looking at the chart, it is apparent that there
+                has been a set number of average claims throughout states until
+                March 2020."), 
+             p("Based on the data provided, we can assume that this is when the
+                lockdown measures were taken place, causing many to lose jobs
+                and in result, file unemployment cases. There is a significant
+                jump in the beginning of March. Alabama for example, shows the
+                claim spike on March 21st and exponentially increases for the
+                next few weeks. This data helps us see the trends of specific
+                months/weeks that the pandemic impacted heavily on people
+                throughout the nation. The data is continuously updated on a 
+                weekly basis, leading to more opportunities to make predictions
+                in the future. This can help provide the government a quick look
+                at what states are affected and how badly they are affected. By
+                analyzing the data, organizations can predict the amount of
+                resources they may need to set up or infer domino chain
+                reactions based on their position. The data serves as a
+                possiblity of allowing individuals/groups to see what they can
+                offer for those that are affected by the pandemic."),
+             h2("Takeaway 3: Washington Unemployment Claims"),
              plotlyOutput("week_plot"),
              h4("Purpose of Washington Unemployment Claims Plot"),
              p("From the scatter/line chart above, the goal was to see if the
@@ -143,38 +178,7 @@ ui <- tagList(navbarPage(
                 and will continually be made about the trends of unemployment
                 claims throughout the weeks of unemployment. This can be done
                 until the pandemic dies down and life approaches normality in
-                the future."),
-             h2("Takeaway 2: National Unemployment Claims"),
-             h2(""),
-             h4("Purpose of the National Unemployment Claims Line Chart"),
-             p("The line chart was created in order to see what the average national
-               claim reported the beginning of the pandemic up until a few weeks 
-               into May."),
-             h4("What We Learned from the Data and What We Can Use Our Data To
-                Predict"),
-             p("Initially we wanted to look at what the unemployment looked like on 
-             average across the US. While we didn’t brainstorm on a specific data, 
-             one of the data sources we looked at was provided and updated on a weekly 
-             basis starting form January 5, 2020. This was the initial pandemic date 
-             marked as the unemployment claims started to take place. The pandemic 
-             obviously did not start off with an outrageous number of unemployment 
-             rates as we believe that as COVID was not impacting employment as much 
-             as it has recently. Looking at the chart, it is apparent that there has 
-             been a set number of average claims throughout states until March 2020."), 
-             p("Based on the data provided, we can assume that this is when the lockdown 
-               measures were taken place, causing many to lose jobs and in result, file
-               unemployment cases. There is a significant jump in the beginning of 
-               March. Alabama for example, shows the claim spike on March 21st and 
-               exponentially increases for the next few weeks. This data helps us see
-               the trends of specific months/weeks that the pandemic impacted heavily 
-               on people throughout the nation. The data is continuously updated on a 
-               weekly basis, leading to more opportunities to make predictions in the future.
-               This can help provide the government a quick look at what states are 
-               affected and how badly they are affected. By analyzing the data, organizations
-               can predict the amount of resources they may need to set up or infer domino
-               chain reactions based on their position. The data serves as a possiblity of
-               allowing individuals/groups to see what they can offer for those that are 
-               affected by the pandemic."),
+                the future.")
              )
   )),
   # sidebar only shows up for the visualization pages
@@ -189,10 +193,11 @@ ui <- tagList(navbarPage(
         # shraddha
         conditionalPanel(condition = "input.tabs == 2", 
                          national_input,
-                         helpText("This line chart displays the trend line of 
-                                  the average unemployment claim rates within the 
-                                  US. All 50 states are included and can be viewed 
-                                  via selecting the state from the select box.")),
+                         helpText("This line chart displays the trend line of
+                                  the average unemployment claim rates within
+                                  the US. All 50 states are included and can be
+                                  viewed via selecting the state from the select 
+                                  box.")),
         # joe
         conditionalPanel(condition = "input.tabs == 3", 
                          industry_input,
@@ -207,7 +212,7 @@ ui <- tagList(navbarPage(
         conditionalPanel(condition = "input.tabs == 1", helpText("main")),
         # shraddha
         conditionalPanel(condition = "input.tabs == 2", 
-                         titlePanel("National Umeployment Claims"),
+                         titlePanel("National Unemployment Claims"),
                          h3("Plot of average unemployment claim rates"),
                          plotlyOutput("national_claims_plot"),
                          helpText("The line chart displays the initial
@@ -235,17 +240,16 @@ ui <- tagList(navbarPage(
 server <- function(input, output) {
   # katie
   
-  # shraddha
+  # National Unemployment Claims
   df_filtered <- reactive({
     filter(load_data, State == input$state_input)
   })
-  
 
-  
   output$national_claims_plot <- renderPlotly({ 
     
-    national_plot <- ggplot(data = df_filtered(), mapping = aes(x = Filed_week_ended,  y = Initial_Claims)) +
-                                                                    
+    national_plot <- ggplot(data = df_filtered(), 
+                            mapping = aes(x = Filed_week_ended,  
+                                          y = Initial_Claims)) +
       geom_line() +
       geom_point() +
       scale_x_date(breaks = df_filtered()$Filed_week_ended) +
@@ -265,9 +269,6 @@ server <- function(input, output) {
     
     return(national_plot)
   })
-  
-  
-  
   
   # washington unemployment plots
   output$industry_plot <- renderPlotly({
