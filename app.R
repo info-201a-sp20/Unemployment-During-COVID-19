@@ -7,7 +7,39 @@ source('scripts/national_report.R')
 # define inputs
 
 # katie
+covid_cases_df <- read.csv("data/COVID-19_cases/us_states_covid19_daily.csv")
 
+# Add a column `Date` that converts the values in `date` column to date
+# variables
+covid19_cases <- covid_cases_df %>%
+  mutate(Date = ymd(date))
+
+# This date range selector allows user to select the range of date
+date_input <- dateRangeInput(
+  inputId = "date",
+  label = "Select Date",
+  start = "2020-01-23", 
+  end = "2020-05-11", 
+  format = "yyyy-mm-dd", 
+  startview = "month", 
+  weekstart = 0, 
+  language = "en", 
+  separator = " to "
+)
+# Select the categories showing in the dropdown widget
+selected_categories <- covid19_cases %>%
+  select(positive, hospitalizedCurrently, hospitalizedCumulative,
+         inIcuCurrently, inIcuCumulative, onVentilatorCurrently,
+         onVentilatorCumulative, recovered, death) 
+
+# This dropdown allows user to select categories of cases
+# in different circumstances
+cases_input <- selectInput(
+  inputId = "categories",
+  label = "Interest of Categories",
+  choices = colnames(selected_categories),
+  selected = "positive"
+)
 
 # shraddha
 national_input <- selectInput("select", 
