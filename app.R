@@ -17,9 +17,10 @@ covid19_cases <- covid_cases_df %>%
 
 # Select the categories showing in the dropdown widget
 selected_categories <- covid19_cases %>%
-  select(positive, hospitalizedCurrently, hospitalizedCumulative,
-         inIcuCurrently, inIcuCumulative, onVentilatorCurrently,
-         onVentilatorCumulative, recovered, death) %>%
+  select(positive, positiveIncrease, hospitalizedCurrently, 
+         hospitalizedCumulative,inIcuCurrently, inIcuCumulative, 
+         onVentilatorCurrently, onVentilatorCumulative, recovered, 
+         death) %>%
   colnames()
 
 # This date range selector allows user to select the range of date
@@ -43,7 +44,7 @@ cases_input <- selectInput(
   inputId = "categories",
   label = "Interest of Categories",
   choices = selected_categories,
-  selected = "positive"
+  selected = "positiveIncrease"
 )
 
 # Return the selected column name in `case_input`
