@@ -3,12 +3,18 @@ library(ggplot2)
 library(dplyr)
 library(plotly)
 library(leaflet)
-
+source('scripts/national_report.R') 
 # define inputs
 
 # katie
 
+
 # shraddha
+national_input <- selectInput("select", 
+            inputId = "state_input",
+            label = h3("Select State"),
+            choices = distinct(load_data,State)
+            )
 
 # joe
 washington_covid <- read.csv("data/washington_unemployment/crosstab_real.csv",
@@ -74,7 +80,7 @@ industry_input <- sliderInput(
   inputId = "industry_choice",
   label = "Please Choose a Range of Industries (1-94), all ordered by
   Alphabetical Order (A-Z)",
-  min = head(impacted_industry$Row, 1),
+  min = head(impacted_industry$Row, 1), 
   max = nrow(impacted_industry),
   value = c(1, 94)
 )
@@ -88,7 +94,7 @@ ui <- tagList(navbarPage(
       # katie
       tabPanel("Visualization 1", value = 1),
       # shraddha
-      tabPanel("Visualization 2", value = 2),
+      tabPanel("Unemployment Claims in the US", value = 2),
       # joe
       tabPanel("Washington Unemployment Data", value = 3)
     ),
@@ -137,7 +143,38 @@ ui <- tagList(navbarPage(
                 and will continually be made about the trends of unemployment
                 claims throughout the weeks of unemployment. This can be done
                 until the pandemic dies down and life approaches normality in
-                the future.")
+                the future."),
+             h2("Takeaway 2: National Unemployment Claims"),
+             h2(""),
+             h4("Purpose of the National Unemployment Claims Line Chart"),
+             p("The line chart was created in order to see what the average national
+               claim reported the beginning of the pandemic up until a few weeks 
+               into May."),
+             h4("What We Learned from the Data and What We Can Use Our Data To
+                Predict"),
+             p("Initially we wanted to look at what the unemployment looked like on 
+             average across the US. While we didn’t brainstorm on a specific data, 
+             one of the data sources we looked at was provided and updated on a weekly 
+             basis starting form January 5, 2020. This was the initial pandemic date 
+             marked as the unemployment claims started to take place. The pandemic 
+             obviously did not start off with an outrageous number of unemployment 
+             rates as we believe that as COVID was not impacting employment as much 
+             as it has recently. Looking at the chart, it is apparent that there has 
+             been a set number of average claims throughout states until March 2020."), 
+             p("Based on the data provided, we can assume that this is when the lockdown 
+               measures were taken place, causing many to lose jobs and in result, file
+               unemployment cases. There is a significant jump in the beginning of 
+               March. Alabama for example, shows the claim spike on March 21st and 
+               exponentially increases for the next few weeks. This data helps us see
+               the trends of specific months/weeks that the pandemic impacted heavily 
+               on people throughout the nation. The data is continuously updated on a 
+               weekly basis, leading to more opportunities to make predictions in the future.
+               This can help provide the government a quick look at what states are 
+               affected and how badly they are affected. By analyzing the data, organizations
+               can predict the amount of resources they may need to set up or infer domino
+               chain reactions based on their position. The data serves as a possiblity of
+               allowing individuals/groups to see what they can offer for those that are 
+               affected by the pandemic."),
              )
   )),
   # sidebar only shows up for the visualization pages
@@ -151,7 +188,11 @@ ui <- tagList(navbarPage(
                          helpText("desc of visual")),
         # shraddha
         conditionalPanel(condition = "input.tabs == 2", 
-                         helpText("desc of visual")),
+                         national_input,
+                         helpText("This line chart displays the trend line of 
+                                  the average unemployment claim rates within the 
+                                  US. All 50 states are included and can be viewed 
+                                  via selecting the state from the select box.")),
         # joe
         conditionalPanel(condition = "input.tabs == 3", 
                          industry_input,
@@ -165,7 +206,16 @@ ui <- tagList(navbarPage(
         # katie
         conditionalPanel(condition = "input.tabs == 1", helpText("main")),
         # shraddha
-        conditionalPanel(condition = "input.tabs == 2", helpText("main")),
+        conditionalPanel(condition = "input.tabs == 2", 
+                         titlePanel("National Umeployment Claims"),
+                         h3("Plot of average unemployment claim rates"),
+                         plotlyOutput("national_claims_plot"),
+                         helpText("The line chart displays the initial
+                                  filed claims vs the number of initial claims
+                                  made. The select state box option allows the
+                                  user to select a specifci state which results
+                                  line chart to adjust according to the data
+                                  values reflecting the chosen state.")),
         
         conditionalPanel(condition = "input.tabs == 3",
                          titlePanel("Washington Unemployment Data"),
@@ -186,6 +236,38 @@ server <- function(input, output) {
   # katie
   
   # shraddha
+  df_filtered <- reactive({
+    filter(load_data, State == input$state_input)
+  })
+  
+
+  
+  output$national_claims_plot <- renderPlotly({ 
+    
+    national_plot <- ggplot(data = df_filtered(), mapping = aes(x = Filed_week_ended,  y = Initial_Claims)) +
+                                                                    
+      geom_line() +
+      geom_point() +
+      scale_x_date(breaks = df_filtered()$Filed_week_ended) +
+      # code found https://stackoverflow.com/questions/51604367/show-all-date-values-on-ggplot-x-axis-r
+      # shows all dates in the x axis
+      
+      ylim(0, max(df_filtered()$Initial_Claims) + 500) +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+      theme(axis.text.y = element_text(angle = 90, hjust = 1)) +
+      # made the data label vertical (hence the 90 degree angle)
+      # code found: https://gist.github.com/benmarwick/8b95b8fb226986bd86a47ad92e0017f2
+      ggtitle("Average Unemployment Claim Rates in the US ") +
+      xlab("Date") +
+      ylab("Number of Initial Claims")
+    
+    ggplotly(national_plot)
+    
+    return(national_plot)
+  })
+  
+  
+  
   
   # washington unemployment plots
   output$industry_plot <- renderPlotly({

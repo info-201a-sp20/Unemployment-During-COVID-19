@@ -16,6 +16,9 @@ load_data$Initial_Claims <- as.numeric(gsub(",", "", load_data$Initial_Claims))
 load_data$Filed_week_ended <- as.Date(load_data$Filed_week_ended,
                                       format = "%m/%d/%y")
 
+x <- filter(load_data, State == "Alabama")
+x
+
 # 50 states were grouped by the date, then took the average of the initial
 # claims and assigned new column for average initial claims
 first <- load_data %>%
