@@ -3,10 +3,10 @@ library(ggplot2)
 library(dplyr)
 library(plotly)
 library(lubridate)
-source('scripts/national_report.R') 
+source("scripts/national_report.R")
 
 server <- function(input, output) {
-# Positive Increase and Hospitalized Cases 
+# Positive Increase and Hospitalized Cases
 output$cases_plot <- renderPlotly({
   cases_plot <- plot_ly(
     data = covid19_cases,
@@ -24,7 +24,6 @@ output$cases_plot <- renderPlotly({
       yaxis = list(title = "Positive and Hospitalized Cases"),
       title = "Jan. 23 to May 11 Positive and Hospitalized Cases"
     )
-  
   return(cases_plot)
 })
 
@@ -42,7 +41,6 @@ output$national_cases_plot <- renderPlotly({
       yaxis = list(title = cases_input$choices),
       title = "Jan. 23 to May 11 Cases"
     )
-  
   return(national_cases_plot)
 })
 
@@ -51,17 +49,15 @@ df_filtered <- reactive({
   filter(load_data, State == input$state_input)
 })
 
-output$national_claims_plot <- renderPlotly({ 
-  
-  national_plot <- ggplot(data = df_filtered(), 
-                          mapping = aes(x = Filed_week_ended,  
+output$national_claims_plot <- renderPlotly({
+  national_plot <- ggplot(data = df_filtered(),
+                          mapping = aes(x = Filed_week_ended,
                                         y = Initial_Claims)) +
     geom_line() +
     geom_point() +
     scale_x_date(breaks = df_filtered()$Filed_week_ended) +
     # code found https://stackoverflow.com/questions/51604367/show-all-date-values-on-ggplot-x-axis-r
     # shows all dates in the x axis
-    
     ylim(0, max(df_filtered()$Initial_Claims) + 500) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
     theme(axis.text.y = element_text(angle = 90, hjust = 1)) +
@@ -70,17 +66,15 @@ output$national_claims_plot <- renderPlotly({
     ggtitle("Average Unemployment Claim Rates in the US ") +
     xlab("Date") +
     ylab("Number of Initial Claims")
-  
-  ggplotly(national_plot)
-  
-  return(national_plot)
+    ggplotly(national_plot)
+    return(national_plot)
 })
 output$conclusion_plot <- renderPlotly({
-  second <- ggplot(data = first, aes(x=Filed_week_ended, y = average_initial_claims, group=1)) +
-    geom_line()+
-    geom_point()+
-    scale_x_date(breaks = first$Filed_week_ended) +  
-    
+  second <- ggplot(data = first, aes(x = Filed_week_ended,
+                                     y = average_initial_claims, group = 1)) +
+    geom_line() +
+    geom_point() +
+    scale_x_date(breaks = first$Filed_week_ended) +
     ylim(0, max(first$average_initial_claims) + 500) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
     ggtitle("Average Unemployment Claim Rates in the US ") +
@@ -88,7 +82,6 @@ output$conclusion_plot <- renderPlotly({
     ylab("Number of Initial Claims")
   ggplotly(second)
   return(second)
-  
 })
 
 # washington unemployment plots
@@ -102,8 +95,7 @@ output$industry_plot <- renderPlotly({
       title = "Amount of Initial Claims Per Industry",
       x = "Industry",
       y = "Initial Claims"
-    ) + 
-    scale_x_discrete(labels = seq(1, 94)) +
+    ) + scale_x_discrete(labels = seq(1, 94)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 2))
   ggplotly(p)
   return(p)
