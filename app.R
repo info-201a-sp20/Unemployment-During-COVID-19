@@ -4,7 +4,7 @@ library(dplyr)
 library(plotly)
 library(leaflet)
 library(lubridate)
-source('scripts/national_report.R') 
+source('scripts/national_report.R')
 # define inputs
 
 # katie
