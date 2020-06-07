@@ -1,5 +1,5 @@
 # Project Brainstorm
-#### Info BA: Shraddha KC, Katie Wang, Joseph Caraan, Chiaki Matsuno
+#### Info BA: Katie Wang, Shraddha KC, Joseph Caraan, Chiaki Matsuno
 
 ***
 

@@ -7,11 +7,11 @@ output: html_document
 library(knitr)
 library(dplyr)
 library(kableExtra)
-source("scripts/summary_info.r")
-source("scripts/summary_table.r")
-source("scripts/covid-19_cases.r")
+source("scripts/summary_info.R")
+source("scripts/summary_table.R")
+source("scripts/covid-19_cases.R")
 source("scripts/washington_data.r")
-source("scripts/national_report.r")
+source("scripts/national_report.R")
 ```
 
 ## The Effects of COVID-19 on Unemployment in Washington and the United States
