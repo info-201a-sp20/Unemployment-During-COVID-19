@@ -29,10 +29,14 @@ output$cases_plot <- renderPlotly({
 
 #National Cases Confirmed
 output$national_cases_plot <- renderPlotly({
+  # Return the selected column in `case_input`
+  selected_col <- covid19_cases %>%
+    colnames(input$categories)
+  
   national_cases_plot <- plot_ly(
     data = covid19_cases,
     x = ~ input$date,
-    y = ~ input$categories,
+    y = ~ covid19_cases[selected_col, ],
     type = "scatter", mode = "lines",
     name = input$categories, fill = "tozeroy"
   ) %>%

@@ -44,9 +44,6 @@ cases_input <- selectInput(
   selected = "positiveIncrease"
 )
 
-# Return the selected column name in `case_input`
-selected_col <- cases_input$selected
-
 
 national_input <- selectInput("select",
                               inputId = "state_input",
