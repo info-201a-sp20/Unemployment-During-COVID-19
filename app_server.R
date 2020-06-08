@@ -31,9 +31,6 @@ output$cases_plot <- renderPlotly({
 # National Cases Confirmed
 # Create the area plot for main tab
 output$national_cases_plot <- renderPlotly({
-  # Return the range of values selected by `date_input`
-  date_range <- range(input$date)
-
   national_cases_plot <- plot_ly(
     data = covid19_cases,
     x = ~ Date,
