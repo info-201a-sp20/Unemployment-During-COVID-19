@@ -298,7 +298,7 @@ ui <- tagList(navbarPage(id = "tabs", theme = "theme.css",
     br(),
     sidebarLayout(
       sidebarPanel(id = "sidebar", includeCSS("www/sidebar.css"),
-        conditionalPanel(condition = "input.tabs == 1", date_input, cases_input,
+        conditionalPanel(condition = "input.tabs == 1", cases_input,
         helpText("This area plot depicts the trend of cases in different
         circumstances in from January 23rd to May11th in all 50 states. 
         Circumstances could be selected from the dropdown select box.")),
