@@ -18,8 +18,7 @@ selected_categories <- covid19_cases %>%
   select(positive, positiveIncrease, hospitalizedCurrently,
          hospitalizedCumulative, inIcuCurrently, inIcuCumulative,
          onVentilatorCurrently, onVentilatorCumulative, recovered,
-         death) %>%
-  colnames()
+         death) 
 
 # This date range selector allows user to select the range of date
 date_input <- dateRangeInput(
@@ -41,12 +40,9 @@ date_input <- dateRangeInput(
 cases_input <- selectInput(
   inputId = "categories",
   label = "Interest of Categories",
-  choices = selected_categories,
+  choices = colnames(selected_categories),
   selected = "positiveIncrease"
 )
-
-# Return the selected column name in `case_input`
-selected_col <- cases_input$selected
 
 
 national_input <- selectInput("select",

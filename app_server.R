@@ -7,6 +7,7 @@ source("scripts/national_report.R")
 
 server <- function(input, output) {
 # Positive Increase and Hospitalized Cases
+# Create the area plot for conclusion takeaway 1
 output$cases_plot <- renderPlotly({
   cases_plot <- plot_ly(
     data = covid19_cases,
@@ -27,18 +28,22 @@ output$cases_plot <- renderPlotly({
   return(cases_plot)
 })
 
-#National Cases Confirmed
+# National Cases Confirmed
+# Create the area plot for main tab
 output$national_cases_plot <- renderPlotly({
+  # Return the range of values selected by `date_input`
+  date_range <- range(input$date)
+
   national_cases_plot <- plot_ly(
     data = covid19_cases,
     x = ~ Date,
-    y = ~ positiveIncrease,
+    y = ~ covid19_cases[, input$categories],
     type = "scatter", mode = "lines",
-    name = cases_input$choices, fill = "tozeroy"
+    name = input$categories, fill = "tozeroy"
   ) %>%
     layout(
       xaxis = list(title = "Date"),
-      yaxis = list(title = cases_input$choices),
+      yaxis = list(title = "Category"),
       title = "Jan. 23 to May 11 Cases"
     )
   return(national_cases_plot)
