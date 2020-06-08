@@ -137,40 +137,52 @@ industry_input <- sliderInput(
 )
 
 # define ui
-ui <- tagList(navbarPage(
+ui <- tagList(navbarPage(id = "tabs", theme = "theme.css",
   title = "Effects of COVID-19 on Unemployment in Washington and United States",
-  tabsetPanel(id = "tabs",
-    tabPanel("Introduction", value = 0,
-      h1("Introduction"), br(),
-      h4("Info BA: Katie Wang, Shraddha KC, Joseph Caraan, Chiaki Matsuno"),
-      br(),
-      h3("The Purpose of This Project"), br(),
+    tabPanel("Introduction", value = 0, includeCSS("www/img.css"),
+             includeCSS("www/well.css"),
+    h1("Introduction"), br(),
+    h4("Info BA: Katie Wang, Shraddha KC, Joseph Caraan, Chiaki Matsuno"), br(),
+    h3("The Purpose of This Project"), br(),
+    wellPanel(
       p("Ever since COVID-19 sweeped the United States there has been a lot of
-      fear and uncertainty regarding the state of national public health, as
-      well as concerns for the future of the economy. Around the globe, many
-      countries have taken a hard hit to their economies across all industries
-      and many have been faced with unemployment. The United States is no
+        fear and uncertainty regarding the state of national public health, as
+        well as concerns for the future of the economy. Around the globe, many
+        countries have taken a hard hit to their economies across all industries
+        and many have been faced with unemployment. The United States is no
       stranger to this issue, as delayed responses to the initial spread of the
-      virus played a large role in its rapid spread, further accelerating the
-      epidemic and the resulting economic downturn."), br(),
+        virus played a large role in its rapid spread, further accelerating the
+        epidemic and the resulting economic downturn."), br(),
       p("This project looks at the effects of COVID-19 on unemployment in
-      Washington and the United States as a whole. We will refer to datasets
-      that show the spread of the virus, as well as national and local
-      unemployment claims for Washington state. This is important because the
-      quarantine has had a large impact on the local and national economy, and
-      looking at this information can help us be prepared for unemployment
-      trends in future waves of the virus."), br(),
-      h3("Data Sources"), br(),
+        Washington and the United States as a whole. We will refer to datasets
+        that show the spread of the virus, as well as national and local
+        unemployment claims for Washington state. This is important because the
+        quarantine has had a large impact on the local and national economy, and
+        looking at this information can help us be prepared for unemployment
+        trends in future waves of the virus.")
+      ),  br(),
+    img(src = "corona.jpg"), br(),
+    h3("Questions of interest"), br(),
+    wellPanel(
+      h4("How does the number of confirmed cases and hospitalized cases affect
+         the unemployment rate in Washington state?"), br(),
+      h4("What impacts does the unemployment have on the US economy/job
+         market?"), br(),
+      h4("How has unemployment in Washington been affected and will continue to
+         be affected by the pandemic?")
+    ), br(),
+    h3("Data Sources"), br(),
+    wellPanel(includeCSS("www/links.css"),
       h4(a("COVID-19 in USA",
-        href = "https://www.kaggle.com/sudalairajkumar/covid19-in-usa/?select=us_states_covid19_daily.csv"),
-        "by Sudalai Raj Kumar"), br(),
+      href = "https://www.kaggle.com/sudalairajkumar/covid19-in-usa/?select=us_states_covid19_daily.csv"),
+      "by Sudalai Raj Kumar"), br(),
       h4(a("US Unemployment Insurance Weekly Claims",
-        href = "https://www.arcgis.com/home/item.html?id=b2286e8d03a74206809252a788f35b52&view=list#data"),
+      href = "https://www.arcgis.com/home/item.html?id=b2286e8d03a74206809252a788f35b52&view=list#data"),
       "by Helen Thompson"), br(),
       h4(a("Initial Claims applications for Unemployment Insurance - WA",
-        href = "https://public.tableau.com/profile/jeff.robinson#!/vizhome/InitialClaimsapplicationsforUnempIoymentInsurance-WA_ETA539-/Story1"),
-      "by Washington Employment Security Department"), br()
-      ),
+      href = "https://public.tableau.com/profile/jeff.robinson#!/vizhome/InitialClaimsapplicationsforUnempIoymentInsurance-WA_ETA539-/Story1"),
+      "by Washington Employment Security Department")
+    )),
       navbarMenu("Visualizations",
         tabPanel("COVID-19 Cases", value = 1),
         tabPanel("Unemployment Claims in the US", value = 2),
@@ -178,8 +190,9 @@ ui <- tagList(navbarPage(
       ),
       # ALL OF OUR takeaways in a conclusion page.
       tabPanel("Conclusion", value = 4,
-        h1("Conclusions"), br(),
-        h3("Takeaway 1: National Confirmed Cases"), br(),
+      h1("Conclusions"), br(),
+      h3("Takeaway 1: National Confirmed Cases"), br(),
+      wellPanel(
         plotlyOutput("cases_plot"), br(),
         h4("Purpose of the National Cases Confirmed Area Plot"), br(),
         p("The area plot focused on the trend throughout the period of selected
@@ -218,8 +231,10 @@ ui <- tagList(navbarPage(
         should purchase/produce more to support the increasing number of
         hospitalized. In conclusion, the insights help the government to puzzle
         out which healthcare resources they are lack in and prepare for similar
-        situation in the future."), br(),
-        h3("Takeaway 2: National Unemployment Claims"), br(),
+        situation in the future.")
+      ), br(),
+      h3("Takeaway 2: National Unemployment Claims"), br(),
+      wellPanel(
         plotlyOutput("conclusion_plot"), br(),
         h4("Purpose of the National Unemployment Claims Line Chart"),
         p("The line chart was created in order to see what the average national
@@ -241,7 +256,7 @@ ui <- tagList(navbarPage(
         lockdown measures were taken place, causing many to lose jobs and in
         result, file unemployment cases. There is a significant jump in the
         beginning of March. Alabama for example, shows the claims spike from
-        March 14th (4,752 claims), br(), exponentially increases for the next
+        March 14th (4,752 claims) exponentially increases for the next
         few dates (55,335 to 113,641 claims). This data helps us see the trends
         of specific months/weeks that the pandemic impacted heavily on people
         throughout the nation. The data is continuously updated on a weekly
@@ -251,8 +266,10 @@ ui <- tagList(navbarPage(
         organizations can predict the amount of resources they may need to set
         up or infer domino chain reactions based on their position. The data
         serves as a possiblity of allowing individuals/groups to see what they
-        can offer for those that are affected by the pandemic."), br(),
-        h2("Takeaway 3: Washington Unemployment Claims"), br(),
+        can offer for those that are affected by the pandemic.")
+      ), br(),
+      h3("Takeaway 3: Washington Unemployment Claims"), br(),
+      wellPanel(
         plotlyOutput("week_plot"), br(),
         h4("Purpose of Washington Unemployment Claims Plot"), br(),
         p("From the scatter/line chart above, the goal was to see if the state
@@ -291,15 +308,14 @@ ui <- tagList(navbarPage(
         Overall, insights can be made and will continually be made about the
         trends of unemployment claims throughout the weeks of unemployment. This
         can be done until the pandemic dies down and life approaches normality
-        in the future."), br()
+        in the future.")
       )
   )),
   # sidebar only shows up for the visualization pages
-  conditionalPanel(condition = "input.tabs != 0 && input.tabs != 4",
-    tagList(
+  conditionalPanel(condition = "input.tabs != 0 && input.tabs != 4", tagList(
     br(),
     sidebarLayout(
-      sidebarPanel(
+      sidebarPanel(id = "sidebar", includeCSS("www/sidebar.css"),
         conditionalPanel(condition = "input.tabs == 1", date_input, cases_input,
         helpText("This area plot depicts the trend of cases in different
         circumstances in selected range of date in all 50 states. Circumstances
@@ -313,33 +329,33 @@ ui <- tagList(navbarPage(
         industry in week 19 of the COVID-19 pandemic. There are a total of 94
         industries classified by the state of Washington."))
       ),
-      mainPanel(
+      mainPanel(wellPanel(
         conditionalPanel(condition = "input.tabs == 1",
         titlePanel("National Cases Confirmed"),
         h3("Plot of cases through date"),
         plotlyOutput("national_cases_plot"),
-        helpText("The area plot portrays the selected categories of interest
+        h5("The area plot portrays the selected categories of interest
         within the selected range of date. The data range box allows users to
         select the period they wanted to focus on. The area plot will be
         adjusted accordingly. The dropdown select box allows user to select the
         categories of interest on y-axis.")),
         conditionalPanel(condition = "input.tabs == 2",
-          titlePanel("National Unemployment Claims"),
-          h3("Plot of average unemployment claim rates"),
-          plotlyOutput("national_claims_plot"),
-          helpText("The line chart displays the initial filed claims vs the
-          number of initial claims made. The select state box option allows the
-          user to select a specifci state which results line chart to adjust
-          according to the data values reflecting the chosen state.")),
+        titlePanel("National Unemployment Claims"),
+        h3("Plot of average unemployment claim rates"),
+        plotlyOutput("national_claims_plot"),
+        h5("The line chart displays the initial filed claims vs the
+        number of initial claims made. The select state box option allows the
+        user to select a specifci state which results line chart to adjust
+        according to the data values reflecting the chosen state.")),
         conditionalPanel(condition = "input.tabs == 3",
-          titlePanel("Washington Unemployment Data"),
-          h3("Plot of Initial Claims Per Industry"),
-          plotlyOutput("industry_plot"),
-          helpText("The bar chart above can be adjusted to see a specific range
-          of industries. The industries are sorted in alphabetical order, and
-          the bar chart will change and display the specific industries in
-          accordance to the range inputted into the slider")
-        )
+        titlePanel("Washington Unemployment Data"),
+        h3("Plot of Initial Claims Per Industry"),
+        plotlyOutput("industry_plot"),
+        h5("The bar chart above can be adjusted to see a specific range
+        of industries. The industries are sorted in alphabetical order, and
+        the bar chart will change and display the specific industries in
+        accordance to the range inputted into the slider"))
+      )
       )
     )
   )
