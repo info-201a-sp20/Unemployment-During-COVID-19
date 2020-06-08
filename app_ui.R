@@ -20,20 +20,6 @@ selected_categories <- covid19_cases %>%
          onVentilatorCurrently, onVentilatorCumulative, recovered,
          death) 
 
-# This date range selector allows user to select the range of date
-date_input <- dateRangeInput(
-  inputId = "date",
-  label = "Select Date",
-  start = "2020-01-23",
-  end = "2020-05-11",
-  min = "2020-01-23",
-  max = "2020-05-11",
-  format = "yyyy-mm-dd",
-  startview = "month",
-  weekstart = 0,
-  language = "en",
-  separator = " to "
-)
 
 # This dropdown allows user to select categories of cases
 # in different circumstances
@@ -314,8 +300,8 @@ ui <- tagList(navbarPage(id = "tabs", theme = "theme.css",
       sidebarPanel(id = "sidebar", includeCSS("www/sidebar.css"),
         conditionalPanel(condition = "input.tabs == 1", date_input, cases_input,
         helpText("This area plot depicts the trend of cases in different
-        circumstances in selected range of date in all 50 states. Circumstances
-        could be selected from the dropdown select box.")),
+        circumstances in from January 23rd to May11th in all 50 states. 
+        Circumstances could be selected from the dropdown select box.")),
         conditionalPanel(condition = "input.tabs == 2", national_input,
         helpText("This line chart displays the trend line of the average
         unemployment claim rates within the US. All 50 states are included and
@@ -330,11 +316,10 @@ ui <- tagList(navbarPage(id = "tabs", theme = "theme.css",
         titlePanel("National Cases Confirmed"),
         h3("Plot of cases through date"),
         plotlyOutput("national_cases_plot"),
-        h5("The area plot portrays the selected categories of interest
-        within the selected range of date. The data range box allows users to
-        select the period they wanted to focus on. The area plot will be
-        adjusted accordingly. The dropdown select box allows user to select the
-        categories of interest on y-axis.")),
+        h5("The area plot portrays the selected categories of interest.
+        The dropdown select box allows user to select the
+        categories of interest on y-axis. The area plot will be
+        adjusted according to the interested categories. ")),
         conditionalPanel(condition = "input.tabs == 2",
         titlePanel("National Unemployment Claims"),
         h3("Plot of average unemployment claim rates"),
